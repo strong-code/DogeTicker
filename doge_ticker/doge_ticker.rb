@@ -38,6 +38,8 @@ class IRCBot
 				' Source code available at http://github.com/clindsay107/Doge_ticker'
 			elsif msg == "!thread"
 				find_thread
+			elsif msg == "!help"
+				show_help
 			end
 		end
 	end
@@ -108,6 +110,11 @@ class IRCBot
 
 		amount_usd = (last_btc_price.to_f * last_doge_price.to_f) * amount.to_f
 		say_to_channel "$\x02#{amount_usd.round(2)}\x02 USD"
+	end
+
+	def show_help
+		say_to_channel '!doge for current price | !c 80000 to convert specified amount of doges to USD | !thread to get link to current DogeCoin thread |'\
+		' !info for information about this bot.'
 	end
 
 	def run

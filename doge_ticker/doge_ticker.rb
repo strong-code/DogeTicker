@@ -28,6 +28,7 @@ class IRCBot
 		if parts.length == 4
 			msg = parts[3..-1].join(" ")[1..-1]
 			get_price if /^(\!doge)/ =~ msg
+			convert_price(msg.match(/\!c\s(\d+)/)[1]) if /\!c\s(\d+)/ =~ msg
 		end
 	end
 
@@ -41,11 +42,22 @@ class IRCBot
 			price = latest_trade["price"]
 			time = latest_trade["time"].slice(latest_trade["time"].index(" ")+1..-1)
 
-			say_to_channel "Last trade executed: \x02#{quantity}\x02 Doges at \x02#{price}\x02 executed at \x02#{time}\x02."
+			say_to_channel "Last trade executed: \x02#{quantity}\x02 Doges at \x02BTC #{price}\x02 executed at \x02#{time}\x02."
 		rescue JSON::ParserError
 			say_to_channel "Much error, such 502 Bad Gateway (try again in a minute, Shibe is many sorry)"
 		end
 
+	end
+
+	def convert_price(amount)
+		url = "https://api.bitcoinaverage.com/exchanges/USD"
+		response = Net::HTTP.get_response(URI(url))
+		begin
+			data = JSON.parse(response.read_body)
+			last_btc_price = data["mtgox"]["rates"]["last"]
+		rescue
+			say_to_channel "Many error, such sorry. Contact head shibe for troubleshooting!"
+		end
 	end
 
 	def run

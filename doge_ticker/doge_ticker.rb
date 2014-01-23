@@ -36,8 +36,30 @@ class IRCBot
 				say_to_channel 'I am an IRC bot written in ruby to help with DogeCoin related tasks. PM BradPitt with feature requests.'\
 				' I am using data from http://cryptsy.com (for DOGE) and http://vircurex.com (for BTC/USD conversion).'\
 				' Source code available at http://github.com/clindsay107/Doge_ticker'
+			elsif msg == "!thread"
+				find_thread
 			end
 		end
+	end
+
+	def find_thread
+		url = "http://a.4cdn.org/g/catalog.json"
+		thread_url = "http://boards.4chan.org/g/res/"
+		response = Net::HTTP.get_response(URI(url))
+		begin
+			data = JSON.parse(response.read_body)
+			(0..9).each do |page|
+				data[page]["threads"].each do |thread|
+					if thread["sub"] == "General DOGE Thread"
+						return say_to_channel "Last bumped thread: \x02#{thread_url << thread["no"].to_s}\x02"
+					end
+				end
+			end
+		rescue JSON::ParserError
+			say_to_channel "Such error fetching thread, many sorry"
+		end
+
+		say_to_channel "Shibe could not fetch current thread, try making a new one."
 	end
 
 	def get_price

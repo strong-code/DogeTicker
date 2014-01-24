@@ -40,6 +40,8 @@ class IRCBot
 				find_thread
 			elsif msg == "!help"
 				show_help
+			elsif msg == "!tip"
+				show_tip_addr
 			end
 		end
 	end
@@ -115,6 +117,10 @@ class IRCBot
 	def show_help
 		say_to_channel '!doge for current price | !c 80000 to convert specified amount of doges to USD | !thread to get link to current DogeCoin thread |'\
 		' !info for information about this bot.'
+	end
+
+	def show_tip_addr
+		say_to_channel "If you enjoy the utility this bot provides, please send a tip to DKtC5RUj1iC3FmXgJ7MvHgNivxG7t2tLNX"
 	end
 
 	def run

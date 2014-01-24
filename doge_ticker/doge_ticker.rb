@@ -52,9 +52,10 @@ class IRCBot
 		response = Net::HTTP.get_response(URI(url))
 		begin
 			data = JSON.parse(response.read_body)
-			(0..9).each do |page|
+			(0..10).each do |page|
 				data[page]["threads"].each do |thread|
-					if thread["sub"] == "General DOGE Thread"
+					p thread["sub"]
+					if !thread["sub"].nil? && thread["sub"].downcase == "general doge thread"
 						return say_to_channel "Last bumped thread: \x02#{thread_url << thread["no"].to_s}\x02"
 					end
 				end

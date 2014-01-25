@@ -42,6 +42,8 @@ class IRCBot
 				show_help
 			elsif msg == "!tip"
 				show_tip_addr
+			elsif msg == "!volume"
+				show_volume
 			end
 		end
 	end
@@ -122,6 +124,19 @@ class IRCBot
 
 	def show_tip_addr
 		say_to_channel "If you enjoy the utility this bot provides, please send a tip to DKtC5RUj1iC3FmXgJ7MvHgNivxG7t2tLNX"
+	end
+
+	def show_volume
+		url = "http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132"
+		response = Net::HTTP.get_response(URI(url))
+		begin 
+			data = JSON.parse(response.read_body)
+			current_volume = data["return"]["markets"]["DOGE"]["volume"]
+
+			say_to_channel "Current market volume: \x02#{current_volume}\x02 DOGE"
+		rescue JSON::ParserError
+			say_to_channel "Much error, such 502 Bad Gateway (try again in a minute, Shibe is many sorry)"
+		end
 	end
 
 	def run

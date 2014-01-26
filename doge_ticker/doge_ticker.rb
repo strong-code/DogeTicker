@@ -150,7 +150,7 @@ class IRCBot
 		response = Net::HTTP.get_response(URI(url))
 		begin 
 			data = JSON.parse(response.read_body)
-			sell_orders = data["return"]["markets"]["DOGE"]["buyorders"]
+			sell_orders = data["return"]["markets"]["DOGE"]["sellorders"]
 			current_wall_str = ""
 			(0..2).each do |x|
 				current_wall_str << "\x02BTC " + sell_orders[x]["total"] + "\x02 @ \x02" + sell_orders[x]["price"].slice(sell_orders[x]["price"].index(/[1-9]/)..-1) + "\x02, "

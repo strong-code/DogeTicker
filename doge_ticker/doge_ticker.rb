@@ -42,8 +42,10 @@ class IRCBot
 				show_help
 			elsif msg == "!tip"
 				show_tip_addr
-			elsif msg == "!volume"
-				show_volume
+			elsif msg == "!buywalls"
+				show_buy_walls
+			elsif msg == "!sellwalls"
+				show_sell_walls
 			end
 		end
 	end
@@ -119,21 +121,42 @@ class IRCBot
 
 	def show_help
 		say_to_channel '!doge for current price | !c 80000 to convert specified amount of doges to USD | !thread to get link to current DogeCoin thread |'\
-		' !info for information about this bot.'
+		' !{buy|sell}walls for walls to the 3rd nearest | !info for information about this bot.'
 	end
 
 	def show_tip_addr
 		say_to_channel "If you enjoy the utility this bot provides, please send a tip to DKtC5RUj1iC3FmXgJ7MvHgNivxG7t2tLNX"
 	end
 
-	def show_volume
+	def show_buy_walls
 		url = "http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132"
 		response = Net::HTTP.get_response(URI(url))
 		begin 
 			data = JSON.parse(response.read_body)
-			current_volume = data["return"]["markets"]["DOGE"]["volume"]
+			buy_orders = data["return"]["markets"]["DOGE"]["buyorders"]
+			current_wall_str = ""
+			(0..2).each do |x|
+				current_wall_str << "\x02BTC " + buy_orders[x]["total"] + "\x02 @ \x02" + buy_orders[x]["price"].slice(buy_orders[x]["price"].index(/[1-9]/)..-1) + "\x02, "
+			end
 
-			say_to_channel "Current market volume: \x02#{current_volume}\x02 DOGE"
+			say_to_channel "Current Buy Walls: #{current_wall_str}"
+		rescue JSON::ParserError
+			say_to_channel "Much error, such 502 Bad Gateway (try again in a minute, Shibe is many sorry)"
+		end
+	end
+
+	def show_sell_walls
+		url = "http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=132"
+		response = Net::HTTP.get_response(URI(url))
+		begin 
+			data = JSON.parse(response.read_body)
+			sell_orders = data["return"]["markets"]["DOGE"]["buyorders"]
+			current_wall_str = ""
+			(0..2).each do |x|
+				current_wall_str << "\x02BTC " + sell_orders[x]["total"] + "\x02 @ \x02" + sell_orders[x]["price"].slice(sell_orders[x]["price"].index(/[1-9]/)..-1) + "\x02, "
+			end
+
+			say_to_channel "Current Sell Walls: #{current_wall_str}"
 		rescue JSON::ParserError
 			say_to_channel "Much error, such 502 Bad Gateway (try again in a minute, Shibe is many sorry)"
 		end

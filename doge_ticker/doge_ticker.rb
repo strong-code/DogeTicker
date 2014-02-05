@@ -95,7 +95,7 @@ class IRCBot
 		response = Net::HTTP.get_response(URI(url))
 		begin
 			data = JSON.parse(response.read_body)
-			last_btc_price = data["vircurex"]["rates"]["last"]
+			last_btc_price = data["btce"]["rates"]["last"]
 		rescue
 			say_to_channel "Many error when fetching BTC price, such sorry. Contact head shibe for troubleshooting!"
 			return

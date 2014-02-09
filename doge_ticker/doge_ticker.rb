@@ -84,6 +84,8 @@ class IRCBot
 			say_to_channel "Last trade executed: \x02#{quantity}\x02 Doges at \x02BTC #{price}\x02 executed at \x02#{time}\x02."
 		rescue JSON::ParserError
 			say_to_channel "Much error, such 502 Bad Gateway (try again in a minute, Shibe is many sorry)"
+			rescue 
+			say_to_channel "Many error when fetching DOGE price, such sorry. Contact head shibe for troubleshooting! (API may be changed/down)"
 		end
 
 	end
@@ -97,7 +99,7 @@ class IRCBot
 			data = JSON.parse(response.read_body)
 			last_btc_price = data["btce"]["rates"]["last"]
 		rescue
-			say_to_channel "Many error when fetching BTC price, such sorry. Contact head shibe for troubleshooting!"
+			say_to_channel "Many error when fetching BTC price, such sorry. Contact head shibe for troubleshooting! (API may be changed/down)"
 			return
 		end
 
@@ -110,6 +112,8 @@ class IRCBot
 		rescue JSON::ParserError
 			say_to_channel "Much error, such 502 Bad Gateway when fetching DOGE price. Contact head shibe for troubleshooting!"
 			return
+		rescue 
+			say_to_channel "Many error when fetching DOGE price, such sorry. Contact head shibe for troubleshooting! (API may be changed/down)"
 		end
 
 		puts ">>>BTC: #{last_btc_price}"

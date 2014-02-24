@@ -179,5 +179,5 @@ class IRCBot
 	end
 end
 
-bot = IRCBot.new('DogeBot', 'irc.rizon.net', 6667, 'do/g/ecoin')
+bot = IRCBot.new('SuperiorDogeBot', 'irc.rizon.net', 6667, 'do/g/ecoin')
 bot.run
